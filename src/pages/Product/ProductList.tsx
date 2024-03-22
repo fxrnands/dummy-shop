@@ -48,8 +48,8 @@ const ProductList = () => {
   }, [filter.maxPrice, filter.minPrice, filter.searchProductName, product]);
 
   const rotateStyle = isRotate
-    ? { transform: "rotate(180deg)", transition: "transform 0.5s ease-in-out" }
-    : { transform: "rotate(0deg)", transition: "transform 0.5s ease-in-out" };
+    ? { transform: "rotate(180deg)", transition: "transform 0.3s ease-in-out" }
+    : { transform: "rotate(0deg)", transition: "transform 0.3s ease-in-out" };
 
   const handleSelectCategory = (index: number) => {
     setSelectedIndex(index);
