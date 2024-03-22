@@ -53,6 +53,7 @@ const ProductList = () => {
 
   const handleSelectCategory = (index: number) => {
     setSelectedIndex(index);
+    handleResetFilter();
   };
 
   useEffect(() => {
@@ -195,9 +196,7 @@ const ProductList = () => {
         </div>
       </div>
       <div className="mt-6 flex lg:px-0 px-4 justify-between">
-        <div className="font-bold">
-          {products[selectedIndex].products.length} products
-        </div>
+        <div className="font-bold">{filteredProducts.length} products</div>
         <div>
           <SortBy
             data={options}
