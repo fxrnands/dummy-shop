@@ -9,7 +9,6 @@ import {
   SellerInformation,
   ShipmentSection,
 } from "../../components";
-import { IoArrowUndoOutline } from "react-icons/io5";
 
 const ProductDetail = () => {
   const { productId, categoryId } = useParams();

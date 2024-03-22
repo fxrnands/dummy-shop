@@ -12,3 +12,9 @@ export interface CategoryProduct {
     stock: number
     sold: number
   }
+
+  export interface FilterType {
+    searchProductName: string;
+    minPrice: string;
+    maxPrice: string;
+  }

@@ -8,7 +8,7 @@ interface Props {
 
 const Description = ({ category, expand, handleShow }: Props) => {
   return (
-    <div className="border-t-4 lg:border-t lg:border-b-0 border-b-4 border-b-gray-400 border-t-gray-400 mt-5">
+    <div className="border-t lg:border-t lg:border-b-0 border-b border-b-gray-400 border-t-gray-400 mt-5">
       <div className="px-4 mt-4 mb-6">
         <p className="font-bold text-lg">Product Detail</p>
         <p className="mt-2 text-sm">

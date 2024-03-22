@@ -8,7 +8,7 @@ interface Props {
 
 const Category = ({ data, handleSelectCategory, selectedIndex }: Props) => {
   return (
-    <div className="overflow-x-auto mx-auto lg:max-w-5xl max-w-[24rem]">
+    <div className="overflow-x-auto lg:mx-auto lg:max-w-5xl max-w-screen mx-4">
       <div className="flex gap-1.5">
         {data.map((item, index) => (
           <div
