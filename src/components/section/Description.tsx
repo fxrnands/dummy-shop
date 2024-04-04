@@ -3,10 +3,11 @@ import Button from "../base/Button";
 interface Props {
   category: string | false;
   expand: boolean;
+  description: string;
   handleShow: () => void;
 }
 
-const Description = ({ category, expand, handleShow }: Props) => {
+const Description = ({ category, expand, handleShow, description }: Props) => {
   return (
     <div className="border-t lg:border-t lg:border-b-0 border-b border-b-gray-400 border-t-gray-400 mt-5">
       <div className="px-4 mt-4 mb-6">
@@ -20,13 +21,15 @@ const Description = ({ category, expand, handleShow }: Props) => {
         </p>
         <p className="mt-4 font-bold">Description</p>
         <p className={`${expand ? "" : "h-12 overflow-hidden"} mt-2`}>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod porro
-          distinctio nisi architecto eligendi saepe quo sunt ut, facere mollitia
-          doloribus quis iusto. Illum unde explicabo sequi atque dignissimos
-          perspiciatis. Ipsam doloribus reprehenderit mollitia optio earum
-          eveniet nulla, quia laboriosam.
+          {description}
         </p>
-        <Button text={"More..."} onClick={handleShow} className={"font-bold"} />
+        {description?.length > 100 && (
+          <Button
+            text={"More..."}
+            onClick={handleShow}
+            className={"font-bold"}
+          />
+        )}
       </div>
     </div>
   );

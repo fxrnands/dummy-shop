@@ -5,12 +5,16 @@ export interface CategoryProduct {
   }
   
   export interface Product {
-    id: number
-    productName: string
-    img: string
-    price: number
-    stock: number
-    sold: number
+    id: number,
+    title: string,
+    price: string,
+    category: string,
+    description: string,
+    image: string
+    rating: {
+      rate: number
+      count: number
+    }
   }
 
   export interface FilterType {

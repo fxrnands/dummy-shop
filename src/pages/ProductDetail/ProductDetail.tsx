@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom";
-import { products } from "../../utils/dummy";
 import { useState } from "react";
+import { useAppDispatch, RootState, AppDispatch } from "../../store";
+import { fetchProducts } from "../../reducers/productReducer";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import {
   Button,
   DescriptionSection,
@@ -11,14 +14,14 @@ import {
 } from "../../components";
 
 const ProductDetail = () => {
-  const { productId, categoryId } = useParams();
+  const { productId } = useParams();
   const [showMore, setShowMore] = useState<boolean>(false);
-  const categoryIdNumber = categoryId ? parseInt(categoryId) : undefined;
-  const productIdNumber = productId ? parseInt(productId) : undefined;
-  const product =
-    categoryIdNumber !== undefined && productIdNumber !== undefined
-      ? products[categoryIdNumber].products[productIdNumber]
-      : undefined;
+  const dispatch: AppDispatch = useAppDispatch();
+  const product = useSelector((state: RootState) => state.productDetail);
+
+  useEffect(() => {
+    dispatch(fetchProducts({ id: productId, category: "" }));
+  }, [dispatch, productId]);
 
   const handleShow = () => {
     setShowMore(!showMore);
@@ -26,23 +29,21 @@ const ProductDetail = () => {
 
   return (
     <div className="lg:flex lg:border-b-2 pb-4 grid lg:gap-4 max-w-5xl mx-auto lg:mt-8">
-      <ProductImage image={product?.img} />
+      <ProductImage image={product.productDetail?.image} />
       <div className="grid lg:w-[80%]">
         <div className="px-4 lg:mt-0 mt-4">
           <ProductInformation
-            productName={product?.productName}
-            sold={product?.sold}
-            stock={product?.stock}
-            price={product?.price}
+            productName={product?.productDetail?.title}
+            sold={product?.productDetail?.rating.count}
+            stock={product?.productDetail?.rating.rate}
+            price={product?.productDetail?.price}
           />
         </div>
         <DescriptionSection
-          category={
-            categoryIdNumber !== undefined &&
-            products[categoryIdNumber]?.categoryName
-          }
+          category={product.productDetail?.category as string}
           expand={showMore}
           handleShow={handleShow}
+          description={product.productDetail?.description as string}
         />
         <div className="">
           <SellerInformation shopName={"Dummy Shop"} location={"Jakarta, ID"} />

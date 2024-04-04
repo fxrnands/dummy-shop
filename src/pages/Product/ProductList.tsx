@@ -1,133 +1,63 @@
 import { useState, useEffect } from "react";
-import { products } from "../../utils/dummy";
 import { Category, Input, ProductCard, SortBy, Button } from "../../components";
 import { options } from "../../utils/constant";
-import { FilterType, Product } from "../../utils/type";
 import { IoIosArrowDown } from "react-icons/io";
+import {
+  fetchProducts,
+  filterProductByName,
+} from "../../reducers/productReducer";
+import { useAppDispatch, RootState, AppDispatch } from "../../store";
+import { useSelector } from "react-redux";
+import { fetchCategories } from "../../reducers/categoryReducer";
 
 const ProductList = () => {
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [product, setProduct] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isRotate, setIsRotate] = useState<boolean>(false);
-  const [filter, setFilter] = useState<FilterType>({
-    searchProductName: "",
-    minPrice: "",
-    maxPrice: "",
-  });
+  const [value, setValue] = useState<string>("");
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string>(
     options[0].option
   );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    if (name === "minPrice" || name === "maxPrice") {
-      const regex = /^[0-9\b]+$/;
-      if (value === "" || regex.test(value)) {
-        setFilter((prevFilter) => ({
-          ...prevFilter,
-          [name]: value,
-        }));
-      }
-    } else {
-      setFilter((prevFilter) => ({
-        ...prevFilter,
-        [name]: value,
-      }));
-    }
+  const dispatch: AppDispatch = useAppDispatch();
+  const products = useSelector((state: RootState) => state.productList);
+  const categories = useSelector((state: RootState) => state.category);
+
+  const handleClick = () => {
+    dispatch(filterProductByName(value));
+  };
+
+  const resetFilter = () => {
+    setValue("");
   };
 
   useEffect(() => {
-    if (
-      filter.searchProductName === "" &&
-      filter.minPrice === "" &&
-      filter.maxPrice === ""
-    ) {
-      setFilteredProducts(product);
+    if (!value) {
+      dispatch(
+        fetchProducts({
+          id: "",
+          category:
+            categories.category && categories?.category[selectedIndex - 1],
+        })
+      );
     }
-  }, [filter.maxPrice, filter.minPrice, filter.searchProductName, product]);
+    dispatch(fetchCategories());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, value, selectedIndex]);
 
   const rotateStyle = isRotate
     ? { transform: "rotate(180deg)", transition: "transform 0.3s ease-in-out" }
     : { transform: "rotate(0deg)", transition: "transform 0.3s ease-in-out" };
 
-  const handleSelectCategory = (index: number) => {
-    setSelectedIndex(index);
-    handleResetFilter();
-  };
-
-  useEffect(() => {
-    if (selectedOption === "Highest Price") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => b.price - a.price);
-      setProduct(sortedProducts);
-    } else if (selectedOption === "Lowest Price") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => a.price - b.price);
-      setProduct(sortedProducts);
-    } else if (selectedOption === "Best Seller") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => b.sold - a.sold);
-      setProduct(sortedProducts);
-    } else if (selectedOption === "Name") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => {
-          return a.productName.localeCompare(b.productName);
-        });
-      setProduct(sortedProducts);
-    } else if (selectedOption === "Lowest Stock") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => a.stock - b.stock);
-      setProduct(sortedProducts);
-    } else if (selectedOption === "Highest Stock") {
-      const sortedProducts = products[selectedIndex].products
-        .slice()
-        .sort((a, b) => b.stock - a.stock);
-      setProduct(sortedProducts);
-    }
-  }, [selectedIndex, selectedOption]);
-
-  const handleApplyFilter = () => {
-    const filtered = product.filter((item) => {
-      const lowerCaseProductName = item.productName.toLowerCase();
-      const lowerCaseSearchProductName = filter.searchProductName.toLowerCase();
-      const isInSearchProductName = lowerCaseProductName.includes(
-        lowerCaseSearchProductName
-      );
-
-      const minPrice = parseFloat(filter.minPrice);
-      const maxPrice = parseFloat(filter.maxPrice);
-
-      const isInRange =
-        (isNaN(minPrice) || item.price >= minPrice) &&
-        (isNaN(maxPrice) || item.price <= maxPrice);
-
-      return isInSearchProductName && isInRange;
-    });
-
-    setFilteredProducts(filtered);
-  };
-
-  const handleResetFilter = () => {
-    setFilter({
-      searchProductName: "",
-      minPrice: "",
-      maxPrice: "",
-    });
-    setFilteredProducts(product);
+  const handleSelectCategory = (selectedIndex: number) => {
+    setSelectedIndex(selectedIndex);
   };
 
   return (
     <div className="max-w-5xl mt-6 mx-auto">
       <Category
-        data={products}
         selectedIndex={selectedIndex}
         handleSelectCategory={handleSelectCategory}
+        data={categories.category}
       />
       <div className="lg:px-0 px-4">
         <div
@@ -155,40 +85,39 @@ const ProductList = () => {
           >
             <div className="overflow-hidden">
               <Input
+                id="productName"
                 placeholder={"Search Product Name"}
+                value={value}
+                onChange={(e: any) => setValue(e.target.value)}
                 className={"border w-full rounded-md outline-none py-1 px-2"}
                 type={"text"}
-                value={filter.searchProductName}
-                onChange={handleChange}
                 name={"searchProductName"}
               />
               <div className="flex mt-3 lg:mb-4 mb-0 items-center justify-between gap-4">
                 <Input
+                  id="minPrice"
                   placeholder={"Minimum Price"}
-                  className={"border rounded-md w-full py-1 px-2 outline-none "}
+                  className={"border rounded-md w-full py-1 px-2 outline-none"}
                   type={"text"}
-                  value={filter.minPrice}
-                  onChange={handleChange}
                   name={"minPrice"}
                 />
                 <span className="text-gray-400"> - </span>
                 <Input
+                  id="maxPrice"
                   placeholder={"Maximum Price"}
                   className={"border rounded-md w-full py-1 px-2 outline-none "}
                   type={"text"}
-                  value={filter.maxPrice}
-                  onChange={handleChange}
                   name={"maxPrice"}
                 />
               </div>
               <Button
                 text={"APPLY"}
-                onClick={handleApplyFilter}
+                onClick={handleClick}
                 className={`w-full lg:w-28 lg:mt-0 mt-2 lg:mr-2 mr-0 border-gray-700 py-1.5 lg:py-2 text-sm bg-gray-700 font-semibold text-white rounded-md border`}
               />
               <Button
+                onClick={resetFilter}
                 text={"RESET FILTER"}
-                onClick={handleResetFilter}
                 className={`w-full lg:w-28 lg:mt-0 mt-2 border-black py-1.5 lg:py-2 text-sm font-semibold text-black rounded-md border`}
               />
             </div>
@@ -196,7 +125,9 @@ const ProductList = () => {
         </div>
       </div>
       <div className="mt-6 flex lg:px-0 px-4 justify-between">
-        <div className="font-bold">{filteredProducts.length} products</div>
+        <div className="font-bold">
+          {products?.productList?.length} products
+        </div>
         <div>
           <SortBy
             data={options}
@@ -208,12 +139,9 @@ const ProductList = () => {
       </div>
 
       <div className="grid mt-3 lg:px-0 px-4 lg:grid-cols-5 grid-cols-3 gap-3">
-        {filteredProducts.map((item) => (
+        {products?.productList?.map((item) => (
           <div key={item.id} className="flex">
-            <ProductCard
-              data={item}
-              detail={`/product/${selectedIndex}/${item.id - 1}`}
-            />
+            <ProductCard data={item} detail={`/product/${item.id}`} />
           </div>
         ))}
       </div>

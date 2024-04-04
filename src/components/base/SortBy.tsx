@@ -25,8 +25,8 @@ const SortBy = ({
       onChange={handleChange}
       defaultValue={defaultValue}
     >
-      {data.map((item) => (
-        <option>{item.option}</option>
+      {data.map((item, index) => (
+        <option key={index}>{item.option}</option>
       ))}
     </select>
   );

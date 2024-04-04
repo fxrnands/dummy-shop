@@ -9,7 +9,7 @@ export default function Navbar() {
   const productId = splitPath[splitPath.length - 1];
 
   const handleBack = () => {
-    window.location.href = "/";
+    window.location.href = "/home";
   };
 
   return (
@@ -17,7 +17,7 @@ export default function Navbar() {
       <>
         <div className="mx-auto max-w-5xl px-2 lg:px-0">
           <div className={`h-14 flex items-center justify-between`}>
-            {productId ? (
+            {productId !== "home" ? (
               <Button
                 text={<IoChevronBack className="w-8 h-8" />}
                 className="mx-2 cursor-pointer"
@@ -27,7 +27,7 @@ export default function Navbar() {
               <>
                 <div className="flex px-2 lg:px-0">
                   <a
-                    href="/"
+                    href="/home"
                     className="flex cursor-pointer flex-shrink-0 items-center"
                   >
                     <img
@@ -39,12 +39,10 @@ export default function Navbar() {
                 </div>
               </>
             )}
-            {productId && (
-              <Button
-                text={<FaShoppingCart className="w-6 h-6" />}
-                className="mx-2 cursor-pointer"
-              />
-            )}
+            <Button
+              text={<FaShoppingCart className="w-6 h-6" />}
+              className="mx-2 cursor-pointer"
+            />
           </div>
         </div>
       </>

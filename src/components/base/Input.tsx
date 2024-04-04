@@ -2,9 +2,10 @@ interface Props {
   placeholder: string;
   className: string;
   type: string;
-  value: string | number;
+  value?: any;
   name: string;
-  onChange: any;
+  onChange?: any;
+  id: string;
 }
 const Input = ({
   placeholder,
@@ -13,10 +14,11 @@ const Input = ({
   type,
   value,
   onChange,
+  id,
 }: Props) => {
   return (
     <input
-      id="search"
+      id={id}
       name={name}
       value={value}
       onChange={onChange}
