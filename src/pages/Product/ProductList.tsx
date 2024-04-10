@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Category, Input, ProductCard, SortBy, Button } from "../../components";
+import {
+  Category,
+  Input,
+  ProductCard,
+  SortBy,
+  Button,
+  Modal,
+  LoginAlert,
+} from "../../components";
 import { options } from "../../utils/constant";
 import { IoIosArrowDown } from "react-icons/io";
 import {
@@ -9,10 +17,14 @@ import {
 import { useAppDispatch, RootState, AppDispatch } from "../../store";
 import { useSelector } from "react-redux";
 import { fetchCategories } from "../../reducers/categoryReducer";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 const ProductList = () => {
+  const navigate = useNavigate();
   const [isRotate, setIsRotate] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+  const [loginAlert, setLoginAlert] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<string>(
     options[0].option
@@ -50,6 +62,16 @@ const ProductList = () => {
 
   const handleSelectCategory = (selectedIndex: number) => {
     setSelectedIndex(selectedIndex);
+  };
+
+  const token = Cookies.get("token");
+
+  const handleDetail = (id: number) => {
+    if (token) {
+      navigate(`/product/${id}`);
+    } else {
+      setLoginAlert(true);
+    }
   };
 
   return (
@@ -141,10 +163,13 @@ const ProductList = () => {
       <div className="grid mt-3 lg:px-0 px-4 lg:grid-cols-5 grid-cols-3 gap-3">
         {products?.productList?.map((item) => (
           <div key={item.id} className="flex">
-            <ProductCard data={item} detail={`/product/${item.id}`} />
+            <ProductCard data={item} onClick={() => handleDetail(item.id)} />
           </div>
         ))}
       </div>
+      <Modal open={loginAlert} setOpen={setLoginAlert}>
+        <LoginAlert />
+      </Modal>
     </div>
   );
 };

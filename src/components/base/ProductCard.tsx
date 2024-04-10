@@ -2,10 +2,10 @@ import { FaStar } from "react-icons/fa6";
 
 interface Props {
   data: any;
-  detail: string;
+  onClick: () => void;
 }
 
-const ProductCard = ({ data, detail }: Props) => {
+const ProductCard = ({ data, onClick }: Props) => {
   const isLargeScreen = window.innerWidth >= 768;
   const truncatedTitle = isLargeScreen
     ? data.title.slice(0, 40)
@@ -16,8 +16,8 @@ const ProductCard = ({ data, detail }: Props) => {
       : truncatedTitle;
 
   return (
-    <a
-      href={detail}
+    <div
+      onClick={onClick}
       className="cursor-pointer border border-gray-100 shadow-lg rounded-[8px]"
     >
       <div className="p-2">
@@ -43,7 +43,7 @@ const ProductCard = ({ data, detail }: Props) => {
           <div>{data.rating.count} sold</div>
         </div>
       </div>
-    </a>
+    </div>
   );
 };
 

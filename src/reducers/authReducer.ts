@@ -1,18 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { postData } from "../pages/libs/api";
+import Cookies from 'js-cookie'
+
 
 export interface LoginSliceType {
     username: string | null
     password: string | null
 }
 
-
 export const loginAccount = createAsyncThunk<LoginSliceType, LoginSliceType, { rejectValue: string }>(
     "login/loginAccount",
     async (payload, thunkAPI) => {
       try {
         const response = await postData("/auth/login", payload);
-        localStorage.setItem("token", response?.data?.token);
+        const token = response?.data.token
+        Cookies.set("token", token);
         return response?.data;
       } catch (error) {
         return thunkAPI.rejectWithValue("Failed to login.");

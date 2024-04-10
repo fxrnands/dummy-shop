@@ -9,7 +9,7 @@ interface Props {
 
 const LoginForm = ({ username, password, handleUsernameChange, handlePasswordChange }: Props) => {
   return (
-    <div className="max-w-80 space-y-4 mx-12">
+    <div className="space-y-4">
       <div>
         <p className="font-semibold">Username</p>
         <Input
