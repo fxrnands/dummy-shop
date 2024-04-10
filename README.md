@@ -31,5 +31,5 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 ## ID & Password
 
-ID : mor_2314
+ID : mor_2314/
 Password : 83r5^_
