@@ -2,13 +2,20 @@ import { Button, LoginForm } from "../../components";
 import { useAppDispatch, AppDispatch } from "../../store";
 import { loginAccount } from "../../reducers/authReducer";
 import { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import { Logo, Shop } from "../../assets";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { LoginFormType } from "../../utils/type";
+import { BeatLoader } from "react-spinners";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState<LoginFormType>({
+    username: "",
+    password: "",
+  });
   const dispatch: AppDispatch = useAppDispatch();
-  const navigate = useNavigate();
+  const { loading } = useSelector((state: RootState) => state.loading);
+  const isEmptyForm = formData.username === "" || formData.password === "";
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, username: e.target.value });
@@ -18,22 +25,13 @@ const Login = () => {
     setFormData({ ...formData, password: e.target.value });
   };
 
-  const handleLogin = async () => {
-    try {
-      const res = await dispatch(
-        loginAccount({
-          username: formData?.username,
-          password: formData?.password,
-        })
-      );
-      if (res.payload !== undefined) {
-        navigate("/home");
-      } else {
-        alert("Failed to login");
-      }
-    } catch (error) {
-      alert("Failed to login");
-    }
+  const handleLogin = () => {
+    dispatch(
+      loginAccount({
+        username: formData?.username,
+        password: formData?.password,
+      })
+    );
   };
 
   return (
@@ -51,19 +49,24 @@ const Login = () => {
           </h1>
           <div className="mx-12 sm:mx-auto w-80">
             <LoginForm
-              username={formData.username}
-              password={formData.password}
+              username={formData?.username}
+              password={formData?.password}
               handleUsernameChange={handleUsernameChange}
               handlePasswordChange={handlePasswordChange}
             />
           </div>
           <div className="grid max-w-80 mt-6 lg:mb-6 sm:mx-auto mx-12">
             <Button
-              text={"Login"}
+              disabled={isEmptyForm}
+              text={loading ? <BeatLoader size={14} color="white" /> : "Login"}
               onClick={() => handleLogin()}
-              className={
-                "w-full px-2 py-3 outline-none border text-white font-bold bg-black border-black rounded-md"
-              }
+              className={`w-full px-2 py-3 outline-none border ${
+                isEmptyForm ? "cursor-not-allowed" : "cursor-pointer"
+              } text-white font-bold ${
+                loading
+                  ? "cursor-not-allowed bg-gray-600 border-gray-600"
+                  : "cursor-pointer bg-black border-black"
+              }  rounded-md`}
             />
             <Button
               text={"Guess Mode"}

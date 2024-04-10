@@ -67,7 +67,7 @@ const ProductList = () => {
   const token = Cookies.get("token");
 
   const handleDetail = (id: number) => {
-    if (token) {
+    if (token !== "undefined" && token) {
       navigate(`/product/${id}`);
     } else {
       setLoginAlert(true);

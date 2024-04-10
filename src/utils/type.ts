@@ -22,3 +22,8 @@ export interface CategoryProduct {
     minPrice: string;
     maxPrice: string;
   }
+
+  export interface LoginFormType {
+    username: string;
+    password: string;
+  }

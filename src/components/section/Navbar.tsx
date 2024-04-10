@@ -49,7 +49,7 @@ export default function Navbar() {
                 </div>
               </>
             )}
-            {token && (
+            {token !== "undefined" && token && (
               <Button
                 text={<FaShoppingCart className="w-6 h-6" />}
                 className="mx-2 cursor-pointer"

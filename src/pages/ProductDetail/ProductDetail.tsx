@@ -34,8 +34,8 @@ const ProductDetail = () => {
         <div className="px-4 lg:mt-0 mt-4">
           <ProductInformation
             productName={product?.productDetail?.title}
-            sold={product?.productDetail?.rating.count}
-            stock={product?.productDetail?.rating.rate}
+            sold={product?.productDetail?.rating?.count}
+            stock={product?.productDetail?.rating?.rate}
             price={product?.productDetail?.price}
           />
         </div>

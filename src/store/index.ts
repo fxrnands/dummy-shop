@@ -8,7 +8,8 @@ export const store = configureStore({
         productDetail: ProductReducer, 
         category: CategoryReducer,
         username: LoginReducer,
-        password: LoginReducer
+        password: LoginReducer,
+        loading: LoginReducer
     }
 })
 

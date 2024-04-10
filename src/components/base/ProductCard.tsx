@@ -37,10 +37,10 @@ const ProductCard = ({ data, onClick }: Props) => {
             <p>
               <FaStar />
             </p>
-            <p className="ml-1">{data.rating.rate}</p>
+            <p className="ml-1">{data?.rating?.rate}</p>
           </div>
           <div>|</div>
-          <div>{data.rating.count} sold</div>
+          <div>{data?.rating?.count} sold</div>
         </div>
       </div>
     </div>
